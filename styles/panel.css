@@ -1,0 +1,230 @@
+@charset "utf-8";
+/* CSS Document */
+@font-face {
+	font-family: panelfont1;
+	src: url(../fonts/Nunito-Regular.ttf);
+}
+@font-face {
+	font-family: Nunito;
+	src: url(../fonts/Nunito-Regular.ttf);
+}
+@font-face {
+	font-family: 'Bangers';
+	font-style: normal;
+	font-weight: 200;
+	src: local('Bangers'), local('Bangers-Regular'), url('../fonts/bangers.woff') format('woff');
+}
+@font-face {
+	font-family: 'Dancing Script';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Dancing Script'), local('DancingScript'), url(../fonts/DancingScript.woff) format('woff');
+}
+.ui-datepicker {
+	font: 62.5% "Trebuchet MS", sans-serif;
+}
+#data {
+	padding: 50px 10px 10px;
+}
+#datainner {
+    background-color: rgba(218, 218, 218, 0.65);
+    border: 2px solid #000;
+    border-radius: 18px;
+    padding: 30px 10px 10px;
+    position: relative;
+    min-height: 150px;
+}
+#salutation {
+	font-family: panelfont1;
+	font-size: 20px;
+	padding: 2px 27px;
+	width: 50%;
+	margin: -68px auto 30px;
+	background-color: rgba(21, 57, 83, 1);
+	border: 2px solid #000;
+	height: 30px;
+	border-radius: 25px 25px 0px 0px;
+	color: #818181;
+	text-align: center;
+}
+#today {
+    font-size: 12px;
+    font-style: italic;
+    text-align: right;
+    padding: 0px 30px;
+}
+#datepickercontainer {
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+}
+#datepicker {
+	text-align: center;
+	padding: 5px 5%;
+	border: 0px;
+	border-bottom-left-radius: 15px;
+	border-top-right-radius: 15px;
+	background-color: rgba(11, 52, 86, 1);
+	color: #FFF;
+	font-size: 1em;
+}
+#waiter {
+	text-align: center;
+	font-family: panelfont1;
+	padding: 20px;
+	letter-spacing: 2px;
+	font-size: 17px;
+}
+#loader {
+	min-height: 130px;
+}
+.recar {
+	margin: 60px 30px;
+}
+.rechead {
+	border-bottom: 2px solid #000;
+	padding: 3px 30px;
+	font-size: 20px;
+	font-family: bangers;
+	letter-spacing: 2px;
+}
+.notirec {
+	vertical-align: top;
+}
+.recentry {
+    background-color: #3E5887;
+    color: #B9C6CE;
+    display: inline-block;
+    font-size: 18px;
+    position: relative;
+    width: 28%;
+    margin: 1%;
+    padding: 1%;
+    overflow: hidden;
+    min-height: 105px;
+    vertical-align: top;
+    border: 1px solid black;
+    text-shadow: 3px 3px 2px black;
+    box-shadow: 5px 5px 5px #000;
+}
+.recelem {
+}
+.recchk {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+}
+.recname {
+}
+.recchk label input {
+	display: none;
+}
+.recchk label span {
+	height: 50px;
+	width: 50px;
+	display: inline-block;
+	background-image: url('../images/unchecked.png');
+	background-size: cover;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+.recchk input:checked + span {
+	background-image: url(../images/checked.png);
+}
+.recname {
+	font-size: 30px;
+	width: 80%;
+	margin-bottom: 15px;
+}
+.recsummary {
+	font-style: italic;
+	font-size: 15px;
+}
+.reccommentedt {
+	position: absolute;
+	background-color: #012D4D;
+	padding: 10px;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	display: none;
+}
+.reccomment {
+	min-height: 20px;
+	margin-top: 10px;
+	font-family: "Dancing Script";
+	font-size: 15px;
+	background-color: rgba(149, 149, 149, 1);
+	color: #000;
+	padding: 5px;
+	border: 1px solid black;
+	border-radius: 5px;
+}
+.comment {
+	width: calc(100% - 5px);
+}
+.reccomment .editbtn {
+	background-image: url('../images/editcomment.png');
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	background-repeat: no-repeat;
+	background-size: cover;
+	margin-left: 10px;
+	margin-bottom: -5px;
+	cursor: pointer;
+}
+.inremftr {
+	height: 30px;
+}
+.inremftr .inrembtn {
+	background-repeat: no-repeat;
+	float: right;
+	padding: 4px 30px 5px 5px;
+	background-size: 25px auto;
+	display: inline-block;
+	background-position: right 0px;
+	margin-left: 10px;
+	cursor: pointer;
+}
+.inremftr .inrembtn:active {
+	color: #999;
+}
+#refresh {
+	background-image: url('../images/refresh.png');
+}
+#reset {
+	background-image: url('../images/reset.png');
+}
+#signal {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 15px;
+    background-image: url('../images/redsignal.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    right: 15px;
+}
+#back {
+	left: 20%;
+}
+.mover,#dateshower {
+	position: absolute;
+	top: 5px;
+	padding: 5px 10px;
+	cursor: pointer;
+	background-color: beige;
+	border-radius: 30px;
+}
+.mover:hover {
+    background-color: black;
+    color: #FFF;
+}
+#frwd {
+	right: 20%;
+}
+#dateshower {
+	left: 45%
+}

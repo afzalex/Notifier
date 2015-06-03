@@ -1,0 +1,16 @@
+@charset "utf-8";
+/* CSS Document */
+#inrem {
+    padding: 0px 50px;
+}
+#intop {
+    font-size: 20px;
+    padding: 30px 0px 0px 50px;
+    color: #FFE206;
+    letter-spacing: 2px;
+}
+
+
+a {
+	color:rgba(192, 255, 113, 1);
+}

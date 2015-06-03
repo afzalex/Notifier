@@ -1,0 +1,143 @@
+@charset "utf-8";
+/* CSS Document */
+@font-face {
+	font-family: panelfont1;
+	src: url(../fonts/Nunito-Regular.ttf);
+}
+@font-face {
+	font-family: Nunito;
+	src: url(../fonts/Nunito-Regular.ttf);
+}
+@font-face {
+	font-family: 'Bangers';
+	font-style: normal;
+	font-weight: 200;
+	src: local('Bangers'), local('Bangers-Regular'), url('../fonts/bangers.woff') format('woff');
+}
+@font-face {
+	font-family: 'Dancing Script';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Dancing Script'), local('DancingScript'), url(../fonts/DancingScript.woff) format('woff');
+}
+.ui-datepicker {
+	font: 62.5% "Trebuchet MS", sans-serif;
+}
+#data {
+	padding: 50px 10px 10px;
+}
+#datainner {
+    background-color: rgba(218, 218, 218, 0.65);
+    border: 2px solid #000;
+    border-radius: 18px;
+    padding: 30px 10px 10px;
+    position: relative;
+    min-height: 150px;
+}
+#salutation {
+	font-family: panelfont1;
+	font-size: 20px;
+	padding: 2px 27px;
+	width: 50%;
+	margin: -68px auto 30px;
+	background-color: rgba(21, 57, 83, 1);
+	border: 2px solid #000;
+	height: 30px;
+	border-radius: 25px 25px 0px 0px;
+	color: #818181;
+	text-align: center;
+}
+#today {
+    font-size: 12px;
+    font-style: italic;
+    text-align: right;
+    padding: 0px 30px;
+}
+#datepickercontainer {
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+}
+#datepicker {
+	text-align: center;
+	padding: 5px 5%;
+	border: 0px;
+	border-bottom-left-radius: 15px;
+	border-top-right-radius: 15px;
+	background-color: rgba(11, 52, 86, 1);
+	color: #FFF;
+	font-size: 1em;
+}
+#waiter {
+	text-align: center;
+	font-family: panelfont1;
+	padding: 20px;
+	letter-spacing: 2px;
+	font-size: 17px;
+}
+#loader {
+	min-height: 100px;
+	margin: 50px 0px 25px;
+}
+#note {
+	min-height: 100px;
+}
+
+#writenote {
+    text-align: center;
+    font-family: bangers;
+    font-size: 25px;
+    letter-spacing: 5px;
+    word-spacing: 10px;
+    margin: auto;
+    width: 250px;
+    border: 1px solid;
+    border-radius: 50%;
+    padding: 60px;
+    background-color: rgb(112, 159, 213);
+}
+#writenote:hover {
+    background-color: rgb(79, 147, 204);
+	cursor: pointer;
+}
+#writenoteimg {
+    background-image: url("../images/writenote.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    height: 200px;
+}
+#writenotetxt{}
+
+#signal {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 15px;
+    background-image: url('../images/redsignal.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    right: 15px;
+}
+#back {
+	left: 20%;
+}
+.mover,#dateshower {
+	position: absolute;
+	top: 5px;
+	padding: 5px 10px;
+	cursor: pointer;
+	background-color: beige;
+	border-radius: 30px;
+}
+.mover:hover {
+    background-color: black;
+    color: #FFF;
+}
+#frwd {
+	right: 20%;
+}
+#dateshower {
+	left: 45%
+}

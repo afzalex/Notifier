@@ -1,0 +1,38 @@
+@charset "utf-8";
+/* CSS Document */
+
+#icon, #logo {
+	height: 60px;
+}
+#intop {
+	height: 40px;
+}
+.intoplst li * {
+	display: inline-block;
+	padding: 5px 10px;
+	width: calc(100% - 20px);
+}
+#intopl li * {
+	background-color: rgba(18, 37, 66, 1);
+	color: #FFF;
+	letter-spacing: 2px;
+}
+#intopr li * {
+	background-color: #CCC;
+}
+#intopr li *:hover {
+	background-color: #333;
+	color: #CCC;
+}
+.intoplst li {
+	position: relative;
+	list-style: none outside none;
+	margin: 1px 1px;
+	width: 15%;
+}
+#intopl li {
+	float: left;
+}
+#intopr li {
+	float: right;
+}

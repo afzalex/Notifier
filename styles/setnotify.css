@@ -1,0 +1,87 @@
+@charset "utf-8";
+.nblock {
+	margin: 20px;
+	border: 3px solid #001757;
+	border-radius: 15px;
+}
+.nblockhead {
+	padding: 10px;
+	background-color: rgba(14, 36, 65, 1);
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
+	font-size: 20px;
+	letter-spacing: 5px;
+	word-spacing: 10px;
+	text-align: center;
+	color: #C0C0C0;
+}
+.nblockrem {
+	background-color: #DADADA;
+	border-bottom-left-radius: 12px;
+	border-bottom-right-radius: 12px;
+	padding: 10px;
+}
+.noti {
+	width: 100%;
+}
+.notielems {
+	border: 1px solid black;
+}
+.notioptions {
+	background-color: #6F6F6F;
+	height: 30px;
+	padding: 5px;
+}
+.notioption {
+	float: right;
+	position: relative;
+	background-color: #183657;
+	color: #FFF;
+	font-size: 15px;
+	font-family: arial;
+	text-align: center;
+	border: 1px solid #FFF;
+	height: 30px;
+	margin-left: 5px;
+	width: 20%;
+}
+.notioption .button {
+	cursor: pointer;
+	padding: 6px;
+}
+.notioption .body {
+	position: absolute;
+	background-color: #F5F5DC;
+	padding: 5px;
+	display: none;
+	right: 0px;
+	left: 0px;
+	bottom: 32px;
+	color: black;
+	text-align: left;
+}
+.noti tr>* {
+}
+.noti th {
+	text-align: left;
+	border-bottom: 1px black solid;
+}
+.notioption form>*:not([type='checkbox']) {
+	display: block;
+	width: 95%;
+}
+.notioption input[type='checkbox'] {
+	background-color: #000;
+}
+.notioption label {
+	margin-top: 8px;
+}
+#message {
+	background-color: #0E2441;
+	margin: 20px;
+	padding: 8px;
+	border-radius: 12px;
+	text-align: center;
+	font-size: 18px;
+	letter-spacing: 2px;
+}
