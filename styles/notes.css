@@ -68,13 +68,6 @@
 	color: #FFF;
 	font-size: 1em;
 }
-#waiter {
-	text-align: center;
-	font-family: panelfont1;
-	padding: 20px;
-	letter-spacing: 2px;
-	font-size: 17px;
-}
 #loader {
 	min-height: 100px;
 	margin: 50px 0px 25px;
@@ -108,7 +101,24 @@
     height: 200px;
 }
 #writenotetxt{}
-
+#loader>*{
+	display: none;
+}
+#waiter {
+	display: block;
+	text-align: center;
+	font-family: panelfont1;
+	padding: 20px;
+	letter-spacing: 2px;
+	font-size: 17px;
+}
+#waiterimg {
+    background-image: url(../images/loading.gif);
+    height: 154px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
 #signal {
     width: 30px;
     height: 30px;

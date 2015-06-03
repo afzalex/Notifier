@@ -1,3 +1,1 @@
-updateRecord
-leaving
-Recorder query : SELECT * FROM recorder WHERE user_id = 2 AND date LIKE '2015-06-02%'
+notereceiver.php > received

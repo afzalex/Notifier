@@ -36,106 +36,101 @@ function tinymceintegrate(){
     	toolbar: "insertfile undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
 	});
 }
-function receivenote(todo, date, page) {
-	todo = todo || "none";
-	date = date || getRecDate();
-	page = page || 0;
-        var data = {
-            "todo": todo,
-            "date": date,
-            "page": page
-        };
-	$.ajax("notereceiver.php", {
-            "type": 'POST',
-            "data": data,
-            "dataType": "xml"
-        }).done(function(data, textStatus, jqXHR){
-            alert("done")
-        }).fail(function(data, textStatus, jqXHR){
-            alert("fail");
-        }).always(function(data, textStatus, jqXHR){
-            alert("always");
-        });
+
+function showLoaderOp($loaderop, $loaderval, $showcheck = false){
+    if($loaderval.length > 0){
+        $loaderop.html($loaderval.text());
+        if($showcheck) $loaderop.show(0);
+    }
+}
+
+/**
+ * @description To send request to get note.
+ * @param {String} todo value describing task.<br />
+ * valid values : "none", "addnote"
+ * @param {Date} date Date object whose note is to be received.
+ * @param {Integer} page page number of note
+ * @param {String} content content of page
+ */
+function receivenote(todo, date, page, content) {
+    todo = todo || "none";
+    page = page || 0;
+    date = date || getRecDate();
+    content = content || "Content not found";
+    var data = {
+        "todo": todo,
+        "date": date,
+        "page": page
+    };
+    $("#signal").css("background-image","url('/notifier/images/yellowsignal.png')");
+    $.ajax("http://localhost/notifier/notesreceiver.php", {
+        "data": data,
+        "dataType": "xml"
+    }).done(function(data, textStatus, jqXHR){
+        if($(data).length > 0){
+            $xml = $(data).first();
+            $dateshower = $xml.find("dateshower");
+            $notepane = $xml.find("notepane");
+            $createnote = $xml.find("createnote");
+            $notefailure = $xml.find("notefailure");
+            $("div.loaderop").hide(0);
+            showLoaderOp($("#dateshower"), $dateshower, true);
+            showLoaderOp($("#writenote"), $createnote, true);
+            showLoaderOp($("#notefailure"), $notefailure, true);
+            if($notepane.length > 0) {
+                $("#notepane").show(0);
+                $notehead = $notepane.find("notehead");
+                $note = $notepane.find("note");
+                $controls = $notepane.find("controls");
+                showLoaderOp($("#notehead"), $notehead);
+                showLoaderOp($("#note"), $note);
+                showLoaderOp($("#controls"), $controls);
+            }
+        }
+        $("#signal").css("background-image","url('/notifier/images/greensignal.png')");
+    }).fail(function(data, textStatus, jqXHR){
+        $("#signal").css("background-image","url('/notifier/images/redsignal.png')");
+    })
 }
 $(document).ready(function(e) {
-	$("#loader").load("notesreceiver.php", function(txt, stat){
-		if(stat == 'success') {
-			$("#signal").css("background-image","url('/notifier/images/greensignal.png')");
-			tinymceintegrate();
-		}
-		else $("#signal").css("background-image","url('/notifier/images/redsignal.png')");
-	});
 	$("#datepicker").datepicker({
-		inline: true,
-		<?php 
-		echo 'defaultDate: new Date("'.$today->format('d M, Y').'"),';
-		echo 'minDate: new Date("'.$crton->format('d M, Y').'"),';
-		echo 'maxDate: new Date("'.$today->format('d M, Y').'"),';
-		?>
-		dateFormat: "d M, yy"
+            inline: true,
+            <?php 
+            echo 'defaultDate: new Date("'.$today->format('d M, Y').'"),';
+            echo 'minDate: new Date("'.$crton->format('d M, Y').'"),';
+            echo 'maxDate: new Date("'.$today->format('d M, Y').'"),';
+            ?>
+            dateFormat: "d M, yy"
 	});
 	$("#datepicker").change(function(e) {
-		$("#signal").css("background-image","url('/notifier/images/yellowsignal.png')");
-		$("#loader").load("notesreceiver.php", {"date": getRecDate()}, function(txt, stat){
-			if(stat == 'success') {
-				tinymceintegrate();
-				$("#signal").css("background-image","url('/notifier/images/greensignal.png')");
-			}
-			else $("#signal").css("background-image","url('/notifier/images/redsignal.png')");
-		});
-    });
+            receivenote("");
+        });
 	$("#back").click(function(e) {
-		var $dtpkr = $("#datepicker")
-		var date = $dtpkr.datepicker("getDate");
-		date.setDate(date.getDate() - 1);
-        $dtpkr.datepicker("setDate", date); 
-		$("#datepicker").change();
-    });
+            var $dtpkr = $("#datepicker")
+            var date = $dtpkr.datepicker("getDate");
+            date.setDate(date.getDate() - 1);
+            $dtpkr.datepicker("setDate", date); 
+            $("#datepicker").change();
+        });
 	$("#frwd").click(function(e) {
-		var $dtpkr = $("#datepicker")
-		var date = $dtpkr.datepicker("getDate");
-		date.setDate(date.getDate() + 1);
-        $dtpkr.datepicker("setDate", date); 
-		$("#datepicker").change();
+            var $dtpkr = $("#datepicker")
+            var date = $dtpkr.datepicker("getDate");
+            date.setDate(date.getDate() + 1);
+            $dtpkr.datepicker("setDate", date); 
+            $("#datepicker").change();
     });
+    receivenote();
 });
 function saveNote(){
-	$("#signal").css("background-image","url('/notifier/images/yellowsignal.png')");
-	var done = {};
-	var comm = {};
-	$(".idholder").each(function(index, element) {
-		comm[$(element).val()] = $(element).siblings(".reccommentedt").children(".comment").val();
-    });
-	$(".recar .isdone:checked").each(function(index, element) {
-		done[$(element).val()] = 1;
-    });
-	$(".recar .isdone:not(:checked)").each(function(index, element) {
-        done[$(element).val()] = 0;
-    });
-	$("#loader").load("notesreceiver.php", {
-		"date": getRecDate(),
-		"done" : done,
-		"comm" : comm
-	}, function(txt, stat){
-		if(stat == 'success')
-		$("#signal").css("background-image","url('/notifier/images/greensignal.png')");
-		else $("#signal").css("background-image","url('/notifier/images/redsignal.png')");
-	});
+    receivenote();
 }
 function getRecDate() {
-	var date = $("#datepicker").datepicker("getDate");
-	var datestr = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
-	return datestr;
+    var date = $("#datepicker").datepicker("getDate");
+    var datestr = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+    return datestr;
 }
 function addnote() {
-	$("#loader").load("notesreceiver.php", {
-		"date": getRecDate(),
-		"todo": "addnote"
-	}, function(txt, stat){
-		if(stat == 'success')
-		$("#signal").css("background-image","url('/notifier/images/greensignal.png')");
-		else $("#signal").css("background-image","url('/notifier/images/redsignal.png')");
-	});
+    receivenote("addnote", getRecDate());
 }
 </script>
 </head>
@@ -156,16 +151,21 @@ function addnote() {
             <div id="frwd" class="mover">Next Day</div>
         </div>
         <div id="loader">
-        	<div class="loaderop" id="waiter">Wait while your data is loading ... </div>
+            <div class="loaderop" id="dateshower"></div>
+            <div class="loaderop" id="waiter">
+            	<div id="waiterimg"></div>
+                <div id="waitertxt">Wait while your data is loading ... </div>
+            </div>
             <div class="loaderop" id="notepane">
-				<div id="notehead"></div>
-				<div id="note"></div>
-			    <div id="controls"></div>
-			</div>
+		<div id="notehead"></div>
+		<div id="note"></div>
+		<div id="controls"></div>
+            </div>
             <div class="loaderop" id="writenote">
             	<div id="writenoteimg"></div>
                 <div id="writenotetxt">Write a note?</div>
             </div>
+            <div class="loaderop" class="failure" id="notefailure"></div>
         </div>
     </div>
   </div></div>
