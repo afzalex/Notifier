@@ -1,1 +1,30 @@
 notereceiver.php > received
+case(delnote)
+noteid(8)
+notelength(3)
+for(0)
+for(1)
+for(2)
+found(2)
+beforedelete
+    3
+    7
+    8
+afterdelete
+    2
+    3
+    4
+    5
+    6
+    7
+notelength(6)
+Client > loadNotifiers() > Error : exception 'PDOException' with message 'SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1' in E:\documents\Afzal\Winamp\notifier\res\utils.php:145
+Stack trace:
+#0 E:\documents\Afzal\Winamp\notifier\res\utils.php(145): PDO->query('SELECT * FROM c...')
+#1 E:\documents\Afzal\Winamp\notifier\notes.php(9): Client->loadNotifiers()
+#2 {main}
+Client > loadNotifiers() > Error : exception 'PDOException' with message 'SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1' in E:\documents\Afzal\Winamp\notifier\res\utils.php:145
+Stack trace:
+#0 E:\documents\Afzal\Winamp\notifier\res\utils.php(145): PDO->query('SELECT * FROM c...')
+#1 E:\documents\Afzal\Winamp\notifier\notes.php(9): Client->loadNotifiers()
+#2 {main}

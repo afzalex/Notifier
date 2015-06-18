@@ -35,17 +35,19 @@
     min-height: 150px;
 }
 #salutation {
-	font-family: panelfont1;
-	font-size: 20px;
-	padding: 2px 27px;
-	width: 50%;
-	margin: -68px auto 30px;
-	background-color: rgba(21, 57, 83, 1);
-	border: 2px solid #000;
-	height: 30px;
-	border-radius: 25px 25px 0px 0px;
-	color: #818181;
-	text-align: center;
+    font-family: panelfont1;
+    font-size: 20px;
+    padding: 2px 27px;
+    width: 50%;
+    margin: -68px auto 30px;
+    background-color: #1C1E20;
+    border: 2px solid #000;
+    height: 30px;
+    border-radius: 25px 25px 0px 0px;
+    color: #7297C2;
+    text-align: center;
+    letter-spacing: 5px;
+    word-spacing: 10px;
 }
 #today {
     font-size: 12px;
@@ -219,7 +221,7 @@
 	border-radius: 30px;
 }
 .mover:hover {
-    background-color: black;
+    background-color: rgba(27, 70, 117, 0.9);
     color: #FFF;
 }
 #frwd {

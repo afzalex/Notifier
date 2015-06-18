@@ -25,22 +25,26 @@ $today = new DateTime();
 <title>Notifier</title>
 <script type="text/javascript">
 function tinymceintegrate(){
-	tinymce.init({
-    selector: "div.noteeditor",
-	inline: true,
+    tinymce.init({
+        selector: "div#note",
+		inline: true,
     	plugins: [
-	        "advlist autolink lists link image charmap print preview anchor",
-        	"searchreplace visualblocks code fullscreen",
-    	    "insertdatetime media table contextmenu paste"
+	        "advlist autolink lists link image hr charmap print preview anchor",
+        	"searchreplace visualblocks code fullscreen textcolor",
+    	    "insertdatetime table contextmenu paste emoticons"
 	    ],
-    	toolbar: "insertfile undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
-	});
+    	toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |" 
+			+ "link forecolor backcolor hr emoticons | print preview"
+    });
 }
 
-function showLoaderOp($loaderop, $loaderval, $showcheck = false){
+function showLoaderOp($loaderop, $loaderval, $showcheck = false, $toshow){
     if($loaderval.length > 0){
         $loaderop.html($loaderval.text());
-        if($showcheck) $loaderop.show(0);
+        if($showcheck) {
+            $toshow = $toshow || $loaderop;
+            $toshow.show(0);
+        }
     }
 }
 
@@ -52,20 +56,22 @@ function showLoaderOp($loaderop, $loaderval, $showcheck = false){
  * @param {Integer} page page number of note
  * @param {String} content content of page
  */
-function receivenote(todo, date, page, content) {
+function receivenote(todo, date, noteid, content) {
     todo = todo || "none";
-    page = page || 0;
     date = date || getRecDate();
+    noteid = noteid || -1;
     content = content || "Content not found";
     var data = {
         "todo": todo,
         "date": date,
-        "page": page
+	    "noteid": noteid,
+        "content": content
     };
     $("#signal").css("background-image","url('/notifier/images/yellowsignal.png')");
     $.ajax("http://localhost/notifier/notesreceiver.php", {
-        "data": data,
-        "dataType": "xml"
+        type: 'POST',
+        data: data,
+        dataType: "xml"
     }).done(function(data, textStatus, jqXHR){
         if($(data).length > 0){
             $xml = $(data).first();
@@ -75,7 +81,7 @@ function receivenote(todo, date, page, content) {
             $notefailure = $xml.find("notefailure");
             $("div.loaderop").hide(0);
             showLoaderOp($("#dateshower"), $dateshower, true);
-            showLoaderOp($("#writenote"), $createnote, true);
+            showLoaderOp($("#writenotetxt"), $createnote, true, $("#writenote"));
             showLoaderOp($("#notefailure"), $notefailure, true);
             if($notepane.length > 0) {
                 $("#notepane").show(0);
@@ -98,12 +104,11 @@ $(document).ready(function(e) {
             <?php 
             echo 'defaultDate: new Date("'.$today->format('d M, Y').'"),';
             echo 'minDate: new Date("'.$crton->format('d M, Y').'"),';
-            echo 'maxDate: new Date("'.$today->format('d M, Y').'"),';
             ?>
             dateFormat: "d M, yy"
 	});
 	$("#datepicker").change(function(e) {
-            receivenote("");
+            receivenote(getRecDate());
         });
 	$("#back").click(function(e) {
             var $dtpkr = $("#datepicker")
@@ -119,11 +124,9 @@ $(document).ready(function(e) {
             $dtpkr.datepicker("setDate", date); 
             $("#datepicker").change();
     });
+    tinymceintegrate();
     receivenote();
 });
-function saveNote(){
-    receivenote();
-}
 function getRecDate() {
     var date = $("#datepicker").datepicker("getDate");
     var datestr = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
@@ -132,11 +135,22 @@ function getRecDate() {
 function addnote() {
     receivenote("addnote", getRecDate());
 }
+function getnote(noteid) {
+    receivenote("getnote", getRecDate(), noteid);
+}
+function savenote(noteid) {
+    receivenote("savenote", getRecDate(), noteid, $("#note").html());
+}
+function delnote(noteid) {
+    if(confirm("Are you sure you want to delete this page?")) {
+        receivenote("delnote", getRecDate(), noteid);
+    }
+}
 </script>
 </head>
 <body>
 <?php $tab="Notes"; include("templateinpre.php"); ?>
-  <div id="inrem">
+    <div id="inrem">
   	<div id="data">
     	<div id="datainner">
     	<div id="salutation">
@@ -161,7 +175,7 @@ function addnote() {
 		<div id="note"></div>
 		<div id="controls"></div>
             </div>
-            <div class="loaderop" id="writenote">
+            <div class="loaderop" id="writenote" onclick="addnote();">
             	<div id="writenoteimg"></div>
                 <div id="writenotetxt">Write a note?</div>
             </div>

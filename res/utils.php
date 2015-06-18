@@ -458,9 +458,9 @@ class Client {
 	}
 	
 	public function loadNotes($dateToQuery) {
-		$max = new DateTime('now'); $max->setTime(23,59,59);
+//		$max = new DateTime('now'); $max->setTime(23,59,59);
 		$min = new DateTime($this->createdon->format('Y-m-d')); $min->setTime(0,0,0);
-		if($dateToQuery >= $min && $dateToQuery <= $max) {
+		if($dateToQuery >= $min) {
 			$date = new DateTime($dateToQuery->format('Y-m-d')); $date->setTime(0,0,0);
 		} else {
 			$date = new DateTime(); $date->setTime(0,0,0);
@@ -472,7 +472,7 @@ class Client {
 		return $date;
 	}
 	
-	public function addNote($date, $content = "No content.") {
+	public function addNote($date, $content = "<h2>Please enter some content here</h2>") {
 		$dateStr = $date->format('Y-m-d');
 		$conn = Connector::getConn();
 		$prep = $conn->prepare("INSERT INTO notes (user_id, date, content) VALUES ($this->userid, '$dateStr 0:0:0', :cont)");
@@ -481,12 +481,11 @@ class Client {
 		$this->reloadNotes($dateStr);
 	}
 	
-	public function updateNote(&$todo, $date, $noteid, $content) {
-		$dateStr = $date->format('Y-m-d');
+	public function updateNote($noteid, $content) {
 		$conn = Connector::getConn();
 		$prep = $conn->prepare("UPDATE notes SET content = :cont WHERE user_id = $this->userid AND id = $noteid");
-		$prep->bind(':cont', $content, PDO::PARAM_LOB);
-		$prep->exec();
+		$prep->bindParam(':cont', $content, PDO::PARAM_LOB);
+		$prep->execute();
 	}
 	
 	public function getNote($noteid) {
@@ -496,12 +495,17 @@ class Client {
 		$prep->fetch(PDO::FETCH_BOUND);
 		return $content;
 	}
+	
+	public function deleteNote($date, $noteid) {
+                $dateStr = $date->format('Y-m-d');
+		Connector::getConn()->exec("DELETE FROM notes WHERE user_id = $this->userid and id = $noteid");
+		$this->reloadNotes($dateStr);
+	}
 
 /***********************************************************************************************************
 ************************************************************************************************************
 ***********************************************************************************************************/
 
-	
 	public static function log($txt, $app = true) {
 		$filename = 'res/logfile.dat';
 		$file = fopen($filename, ($app == true) ? "a" : "w");

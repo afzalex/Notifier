@@ -35,17 +35,19 @@
     min-height: 150px;
 }
 #salutation {
-	font-family: panelfont1;
-	font-size: 20px;
-	padding: 2px 27px;
-	width: 50%;
-	margin: -68px auto 30px;
-	background-color: rgba(21, 57, 83, 1);
-	border: 2px solid #000;
-	height: 30px;
-	border-radius: 25px 25px 0px 0px;
-	color: #818181;
-	text-align: center;
+    font-family: panelfont1;
+    font-size: 20px;
+    padding: 2px 27px;
+    width: 50%;
+    margin: -68px auto 30px;
+    background-color: #1C1E20;
+    border: 2px solid #000;
+    height: 30px;
+    border-radius: 25px 25px 0px 0px;
+    color: #7297C2;
+    text-align: center;
+    letter-spacing: 5px;
+    word-spacing: 10px;
 }
 #today {
     font-size: 12px;
@@ -72,10 +74,71 @@
 	min-height: 100px;
 	margin: 50px 0px 25px;
 }
-#note {
-	min-height: 100px;
+#notepane {
+    background-color: #A0B9D7;
+    border: 2px solid #AAC5FE;
 }
-
+#notehead {
+    position: relative;
+    background-color: #808080;
+    text-shadow: 4px 4px 3px rgba(0, 0, 0, 0.8);
+}
+#dateno {
+    font-size: 60px;
+    background-color: rgba(27, 70, 117, 0.9);
+    width: 75px;
+    text-align: center;
+    padding: 10px 20px 20px;
+}
+#datemonth {
+    position: absolute;
+    font-size: 75px;
+    color: rgba(2, 36, 86, 0.9);
+    bottom: 0px;
+    left: 115px;
+    padding: 0px 20px;
+}
+#dateday {
+    position: absolute;
+    bottom: 0px;
+    width: 100px;
+    text-align: center;
+    font-size: 20px;
+    padding: 2px 5px;
+}
+#pagenumber {
+    position: absolute;
+    right: 0px;
+    padding: 10px 25px;
+    font-size: 25px;
+    bottom: 0px;
+    color: rgba(27, 70, 117, 0.9);
+}
+#note {
+    min-height: 200px;
+    padding: 0px 10px;
+    border-top: 2px solid #AAC5FE;
+	word-wrap: break-word;
+}
+#controls {
+    position: relative;
+    height: 30px;
+}
+#controls > div {
+    float: right;
+    padding: 5px 10px;
+    width: 100px;
+    background-color: rgba(27, 70, 117, 0.9);
+    height: 18px;
+    text-align: center;
+    cursor: pointer;
+    margin-left: 2px;
+    border: 1px solid black;
+}
+#controls > div:hover {
+    background-color: #143363;
+    color: #777;
+}
 #writenote {
     text-align: center;
     font-family: bangers;
@@ -142,7 +205,7 @@
 	border-radius: 30px;
 }
 .mover:hover {
-    background-color: black;
+    background-color: rgba(27, 70, 117, 0.9);
     color: #FFF;
 }
 #frwd {
