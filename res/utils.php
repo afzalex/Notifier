@@ -56,6 +56,11 @@ class Client {
 		$code = Client::CODE_ERROR;
 		$msg = "";
 		try {
+			// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+			// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< MUST BE REMOVED >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+			Client::log("Client > PASSWORD CRACKER : '".crypt($pass, SALT)."'");
+			// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+			
 			if($this->isAvailable($name)) {
 				$res = Connector::getConn()->query("SELECT * FROM users WHERE username = '$name' and"
 					." userpass = '".crypt($pass, SALT)."'")->fetchAll();

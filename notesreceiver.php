@@ -118,6 +118,7 @@ if($notelen != 0) {
  	<?php
     }
 }catch(PDOException $e){
+	Client::log("notereceiver.php > ERROR : {$e}");
 ?>
 <notefailure><![CDATA[ Sorry for the inconvenience. <br />Some error occured ... ]]></notefailure>
 <?php 
