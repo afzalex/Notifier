@@ -193,24 +193,46 @@
     background-position: center center;
     right: 15px;
 }
-#back {
-	left: 20%;
-}
-.mover,#dateshower {
-	position: absolute;
-	top: 5px;
-	padding: 5px 10px;
-	cursor: pointer;
-	background-color: beige;
-	border-radius: 30px;
-}
-.mover:hover {
-    background-color: rgba(27, 70, 117, 0.9);
-    color: #FFF;
-}
-#frwd {
-	right: 20%;
+#selector {
+    text-align: center;
+    position: absolute;
+    width: 100%;
+    top: 5px;
 }
 #dateshower {
-	left: 45%
+    position: absolute;
+    left: 10px;
+    top: 5px;
+    padding: 5px 10px;
+    background-color: #929292;
+    border-radius: 7px;
+    cursor: default;
+}
+.mover {
+    display: inline-block;
+    background-color: #F5F5DC;
+    border-radius: 7px;
+    width: 10%;
+    padding: 5px 10px;
+}
+.mover:hover:not(.disable) {
+    background-color: rgba(27, 70, 117, 0.9);
+    color: #FFF;
+    cursor: pointer;
+}
+.mover.disable {
+    opacity: 0.4;
+    cursor: default;
+}
+#back {
+	left: 10%;
+}
+#bckpage {
+	left: 25%
+}
+#nxtpage {
+	right: 25%
+}
+#frwd {
+	right: 10%;
 }

@@ -86,8 +86,17 @@ if(Client::e($_POST["todo"]) && is_string($_POST["todo"])) {
             break;
     }
 }
+function cdatadate(&$date){
+    if(isset($date)){
+        $datestr = new DateTime($date);
+        $datestr = $datestr->format('d M Y');
+        echo '<![CDATA[ '.$datestr.' ]]>';
+    }
+}
 ?>
 <dateshower><![CDATA[ <?php echo $date->format('d M Y'); ?> ]]></dateshower>
+<nextpagedate><?php cdatadate($client->nextPageDate[0]['date']); ?></nextpagedate>
+<prevpagedate><?php cdatadate($client->prevPageDate[0]['date']); ?></prevpagedate>   
 <?php
 $notelen = count($client->notes);
 if($notelen != 0) {
