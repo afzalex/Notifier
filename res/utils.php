@@ -1,6 +1,10 @@
 <?php
 
-define('SALT', "cNzENAueT12tKvPWh+3Dfy2wQ9jchPNz");
+/**
+ * Salts created with base64_encode(mcrypt_create_iv(24))
+ */
+define('PASSWORD_SALT', "cNzENAueT12tKvPWh+3Dfy2wQ9jchPNz");
+define('LOGGEDIN_SALT', "fgOyyHmxkJDeX2O4jwuLbcgLT0/mq+tu");
 date_default_timezone_set('Asia/Kolkata');
 
 /* It will help to use single Connection. */
@@ -13,7 +17,7 @@ class Connector {
     private static $pdo;
 
     public static function getConn() {
-        $passwd = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, SALT, base64_decode(file_get_contents("res/databasepassword.dat")), MCRYPT_MODE_ECB);
+        $passwd = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, PASSWORD_SALT, base64_decode(file_get_contents("res/databasepassword.dat")), MCRYPT_MODE_ECB);
         if (!isset(Connector::$pdo)) {
             Connector::$pdo = new PDO(Connector::dsn, Connector::username, $passwd);
             Connector::$pdo->setAttribute(PDO::ATTR_PERSISTENT, true);
@@ -67,6 +71,72 @@ class Client {
         );
     }
 
+    public function verifyKeepLogged(&$logged_in_flag) {
+        if (Client::e($logged_in_flag) && $logged_in_flag == 'on')
+            try {
+                if (Client::e($_COOKIE['logged_in_id']) && Client::e($_COOKIE['logged_in_user_name']) &&
+                        Client::e($_COOKIE['logged_in_hash']) && Client::e($_COOKIE['logged_in_user_id'])) {
+                    $unique_id = $_COOKIE['logged_in_id'];
+                    $user_id = $_COOKIE['logged_in_user_id'];
+                    $user_name = $_COOKIE['logged_in_user_name'];
+                    $user_hash = $_COOKIE['logged_in_hash'];
+                    $hash = crypt(LOGGEDIN_SALT . $unique_id . $user_name
+                            . $_SERVER['REMOTE_ADDR'], LOGGEDIN_SALT);
+                    if ($user_hash === $hash) {
+                        $res = Connector::getConn()->query("SELECT * FROM users WHERE username = '$user_name' and"
+                                        . " id = " . $user_id)->fetchAll();
+                        if (count($res) && $hash === $res[0]["loggedin_hash"] &&
+                                (time() - strtotime($res[0]["loggedin_last"])) < (60 * 60 * 24 * 15)) {
+                            $this->username = strval($res[0]["username"]);
+                            $this->userid = intval($res[0]["id"]);
+                            $this->createdon = new DateTime($res[0]["createdon"]);
+                            $code = Client::CODE_SUCCESS;
+                            $msg = "Logged in";
+                            return true;
+                        }
+                    }
+                }
+            } catch (Exception $ex) {
+                Client::log("utils.php > Client > verifyKeepLogged(...) > ERROR : " . $ex);
+            }
+        return false;
+    }
+
+    public static function removeLoggedinSettings() {
+        setcookie('logged_in_flag', null, -1);
+        setcookie('logged_in_id', null, -1);
+        setcookie('logged_in_user_id', null, -1);
+        setcookie('logged_in_user_name', null, -1);
+        setcookie('logged_in_hash', null, -1);
+    }
+
+    /**
+     * This function add cookies that will be used for "keep me logged in" feature.
+     * Every time when a user logged in successfully with "keep me logged in" on, these cookies will be reset.
+     */
+    public function resetLoggedinSettings() {
+        $time = date('Y-m-d H:i:s');
+        $this->removeLoggedinSettings();
+        try {
+            $unique_id = uniqid();
+            $expires = time() + 60 * 60 * 24 * 15;  // expires after 15 days
+            $hash = crypt(LOGGEDIN_SALT . $unique_id . $this->username
+                    . $_SERVER['REMOTE_ADDR'], LOGGEDIN_SALT);
+            $query = "UPDATE users SET loggedin_last = '" . $time
+                    . "', loggedin_hash = '" . $hash . "' WHERE id = " . $this->userid
+                    . " AND username = '" . $this->username . "'";
+            if (Connector::getConn()->exec($query)) {
+                setcookie('logged_in_flag', 'on', $expires);
+                setcookie('logged_in_id', $unique_id, $expires);
+                setcookie('logged_in_user_id', $this->userid, $expires);
+                setcookie('logged_in_user_name', $this->username, $expires);
+                setcookie('logged_in_hash', $hash, $expires);
+            }
+        } catch (Exception $ex) {
+            Client::log("utils.php > Client > resetLoggedinSettings() > ERROR : " . $ex);
+        }
+    }
+
     /**
      * This function will authenticate user, and return result
      * in the form of array obtained through <i>installResult(...)</i>.
@@ -75,17 +145,20 @@ class Client {
      * @param type $pass The password of the user.
      * @return type resulting array.
      */
-    public function authenticate($name, $pass) {
+    public function authenticate($name, $pass, &$keeplogged = NULL) {
         $code = Client::CODE_ERROR;
         $msg = "";
         try {
             if ($this->isAvailable($name)) {
                 $res = Connector::getConn()->query("SELECT * FROM users WHERE username = '$name' and"
-                                . " userpass = '" . crypt($pass, SALT) . "'")->fetchAll();
+                                . " userpass = '" . crypt($pass, PASSWORD_SALT) . "'")->fetchAll();
                 if (count($res) == 1) {
                     $this->username = strval($res[0]["username"]);
                     $this->userid = intval($res[0]["id"]);
                     $this->createdon = new DateTime($res[0]["createdon"]);
+                    if (Client::e($keeplogged) && $keeplogged == 'on') {
+                        $this->resetLoggedinSettings();
+                    }
                     $code = Client::CODE_SUCCESS;
                     $msg = "Logged in";
                 } else {
@@ -123,7 +196,7 @@ class Client {
                 $msg = "User already registered";
             } else {
                 Connector::getConn()->exec("INSERT INTO users (username, userpass) VALUES ('$name', '"
-                        . crypt($pass, SALT) . "')");
+                        . crypt($pass, PASSWORD_SALT) . "')");
                 $code = Client::CODE_SUCCESS;
                 $msg = "User account is successfully created";
             }
@@ -252,14 +325,31 @@ class Client {
         return Client::installResult($code, $msg, $prs);
     }
 
+    private function processNoteSummary(&$summ) {
+        if (!Client::e($summ))
+            $summ = "";
+        else {
+            $summ = preg_replace_callback('/(?<=\s|^)http(s?):\/\/.*(?=\s|$)/iU', function($matches) {
+                print_r($matches);
+                return "<a href='$matches[0]'>$matches[0]</a>";
+            }, $summ);
+        }
+    }
+
+    private function filterEntry(&$entry) {
+        if (Client::e($entry)) {
+            $entry = str_replace("'", "''", $entry);
+        }
+    }
+
     public function addDaily(&$name, &$summ, &$catid) {
         $code = Client::CODE_FAIL;
         $msg = "";
         $prs = Client::PROCESS_ADD_DAILY;
         try {
             if (Client::e($name) && Client::e($catid)) {
-                if (!Client::e($summ))
-                    $summ = "";
+                $this->processNoteSummary($summ);
+                $this->filterEntry($summ);
                 Connector::getConn()->exec("INSERT INTO task_daily (user_id, "
                         . "category_id, name, summary) VALUES ($this->userid, $catid, "
                         . "'$name', '$summ')");
@@ -282,8 +372,10 @@ class Client {
         $prs = Client::PROCESS_EDIT_DAILY;
         try {
             if (Client::e($id) && Client::e($catid)) {
-                if (!Client::e($summ))
-                    $summ = "";
+                $this->processNoteSummary($summ);
+                $this->filterEntry($summ);
+                Client::log("UPDATE task_daily SET category_id = $catid, summary = '$summ' "
+                        . "WHERE user_id = $this->userid and id = $id");
                 Connector::getConn()->exec("UPDATE task_daily SET category_id = $catid, summary = '$summ' "
                         . "WHERE user_id = $this->userid and id = $id");
                 $code = Client::CODE_SUCCESS;
@@ -327,8 +419,7 @@ class Client {
         $prs = Client::PROCESS_ADD_WEAKLY;
         try {
             if (Client::e($name) && Client::e($day) && Client::e($catid)) {
-                if (!Client::e($summ))
-                    $summ = "";
+                $this->processNoteSummary($summ);
                 Connector::getConn()->exec("INSERT INTO task_weekly (user_id, category_id, name, day, summary) VALUES "
                         . "($this->userid, $catid, '$name', '$day', '$summ')");
                 $code = Client::CODE_SUCCESS;
@@ -350,8 +441,7 @@ class Client {
         $prs = Client::PROCESS_EDIT_WEAKLY;
         try {
             if (Client::e($id) && Client::e($day) && Client::e($catid)) {
-                if (!Client::e($summ))
-                    $summ = "";
+                $this->processNoteSummary($summ);
                 Connector::getConn()->exec("UPDATE task_weekly SET day = '$day', summary = '$summ', category_id = $catid "
                         . "WHERE user_id = $this->userid AND id = $id");
                 $code = Client::CODE_SUCCESS;
@@ -486,7 +576,7 @@ class Client {
         }
     }
 
-    /* ***********************************************************************************************************
+    /*     * **********************************************************************************************************
      * ***********************************************************************************************************
      * ********************************************************************************************************* */
 
@@ -560,5 +650,7 @@ class Client {
         fwrite($file, $txt . "\n");
         fclose($file);
     }
+
 }
+
 ?>

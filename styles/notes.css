@@ -224,15 +224,3 @@
     opacity: 0.4;
     cursor: default;
 }
-#back {
-	left: 10%;
-}
-#bckpage {
-	left: 25%
-}
-#nxtpage {
-	right: 25%
-}
-#frwd {
-	right: 10%;
-}

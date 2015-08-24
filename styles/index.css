@@ -7,6 +7,7 @@
 #centerblock {
 	padding: 20px;
 	height: calc(100% - 230px);
+        min-height: 350px;
 }
 #inrem {
 	width: 100%;
@@ -46,13 +47,23 @@
 	width: 30%;
 	background-color: rgba(210, 210, 210, 0.80);
 }
-#formq input {
+#formq input[type="text"], #formq input[type="password"] {
 	width: 61%;
 	margin-bottom: 10px;
 }
-#formq input.sbmt {
+#formq input[type="submit"] {
 	width: 90%;
 	height: 35px;
+}
+#formq input[type="checkbox"] {
+	height: auto;
+}
+
+#keeplogged {
+    background-color: rgba(210, 210, 210, 0.5);
+    margin: auto;
+    padding: 2px;
+    width: 20%;
 }
 .form {
 	padding: 20px;
