@@ -188,6 +188,9 @@ function getnote(noteid, date) {
 function savenote(noteid) {
     receivenote("savenote", getRecDate(), noteid, $("#note").html());
 }
+function setdefault(noteid) {
+    receivenote("setdefault", getRecDate(), noteid, $("#note").html())
+}
 function delnote(noteid) {
     if(confirm("Are you sure you want to delete this page?")) {
         receivenote("delnote", getRecDate(), noteid);

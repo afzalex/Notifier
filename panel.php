@@ -31,6 +31,17 @@ $today = new DateTime();
                     $elem.removeClass(className);
                 }
             }
+            function linkConverter(){
+                $("#loader").ready(function(){
+                    $("#loader").find(".recsummary").each(function(index, elem){
+                    var matter = $(elem).html().replace(/(^| )http(s?):\/\/.*(?= |$)/g, function(match, index){
+                        match = match.trim();
+                            return "<a href='"+match+"'>"+match+"</a>";
+                        });
+                    $(elem).html(matter);
+                    });
+                });
+            }
             $(document).ready(function (e) {
                 $("#loader").load("datareceiver.php", function (txt, stat) {
                     if (stat === 'success') {
@@ -39,7 +50,8 @@ $today = new DateTime();
                         var max = new Date('<?php echo $today->format('d M, Y'); ?>');
                         var now = new Date($("#dateshower").text());
                         addCondClass(now <= min, $("#back"));
-                        addCondClass(now >= max, $("#frwd"))
+                        addCondClass(now >= max, $("#frwd"));
+                        linkConverter();
                     }
                     else
                         $("#signal").css("background-image", "url('/notifier/images/redsignal.png')");
@@ -62,7 +74,8 @@ echo 'maxDate: new Date("' . $today->format('d M, Y') . '"),';
                             var max = new Date('<?php echo $today->format('d M, Y'); ?>');
                             var now = new Date($("#dateshower").text());
                             addCondClass(now <= min, $("#back"));
-                            addCondClass(now >= max, $("#frwd"))
+                            addCondClass(now >= max, $("#frwd"));
+                            linkConverter();
                         }
                         else
                             $("#signal").css("background-image", "url('/notifier/images/redsignal.png')");

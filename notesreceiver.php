@@ -63,6 +63,28 @@ if(Client::e($_POST["todo"]) && is_string($_POST["todo"])) {
                 }
             }
             break;
+        case "setdefault":
+            if(Client::e($_POST["noteid"])) {
+                $noteid = intval($_POST["noteid"]);
+                $found = false;
+                $notelen = count($client->notes);
+                for($i = 0; $i < $notelen; $i++) {
+                    $note = $client->notes[$i];
+                    if($note["id"] == $noteid) {
+                        $found = true;
+                        $page = $i;
+		        if(Client::e($_POST["content"])){
+                            $client->updateNote($noteid, $_POST["content"]);
+                            $client->setDefault($noteid);
+                        }
+                        break;
+                    }
+                }
+                if(!$found) {
+                    $page = 0;
+                }
+            }
+            break;
         case "delnote": 
             if(Client::e($_POST["noteid"])) {
                 $noteid = intval($_POST["noteid"]);
@@ -118,6 +140,7 @@ if($notelen != 0) {
         <?php if($page >= 0 && $page < $notelen) { ?><div id="notectrldel" class="notectrl" onclick="delnote(<?php echo $client->notes[$page]["id"]; ?>);">Delete</div><?php } ?>
         <?php if($page >= 0 && $page < $notelen) { ?><div id="notectrlsave" class="notectrl" onclick="savenote(<?php echo $client->notes[$page]["id"]; ?>);">Save</div><?php } ?>
         <?php if($page == ($notelen - 1)) { ?><div id="notectrladd" class="notectrl" onclick="addnote();">Add</div><?php } ?>
+        <div id="notectrlsetdef" class="notectrl" onclick="setdefault(<?php echo $client->notes[$page]["id"]; ?>, true)">Set Default</div>
     ]]></controls>
 </notepane>
 	<?php

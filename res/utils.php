@@ -328,12 +328,14 @@ class Client {
     private function processNoteSummary(&$summ) {
         if (!Client::e($summ))
             $summ = "";
+        /*
         else {
             $summ = preg_replace_callback('/(?<=\s|^)http(s?):\/\/.*(?=\s|$)/iU', function($matches) {
                 print_r($matches);
                 return "<a href='$matches[0]'>$matches[0]</a>";
             }, $summ);
         }
+         */
     }
 
     private function filterEntry(&$entry) {
@@ -610,9 +612,13 @@ class Client {
         return $date;
     }
 
-    public function addNote($date, $content = "<h2>Please enter some content here</h2>") {
+    public function addNote($date) {
         $dateStr = $date->format('Y-m-d');
         $conn = Connector::getConn();
+        $prep = $conn->prepare("SELECT content FROM notes WHERE id = (SELECT default_note FROM users WHERE user_id = $this->userid)");
+        $prep->execute();
+        $prep->bindColumn(1, $content, PDO::PARAM_LOB);
+        $prep->fetch(PDO::FETCH_BOUND);
         $prep = $conn->prepare("INSERT INTO notes (user_id, date, content) VALUES ($this->userid, '$dateStr 0:0:0', :cont)");
         $prep->bindParam(':cont', $content, PDO::PARAM_LOB);
         $prep->execute();
@@ -624,6 +630,11 @@ class Client {
         $prep = $conn->prepare("UPDATE notes SET content = :cont WHERE user_id = $this->userid AND id = $noteid");
         $prep->bindParam(':cont', $content, PDO::PARAM_LOB);
         $prep->execute();
+    }
+
+    public function setDefault($noteid) {
+        $conn = Connector::getConn();
+        $conn->exec("UPDATE users SET default_note = $noteid WHERE id = $this->userid");
     }
 
     public function getNote($noteid) {
