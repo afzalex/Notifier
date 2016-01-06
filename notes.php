@@ -77,11 +77,11 @@ function receivenote(todo, date, noteid, content) {
     var data = {
         "todo": todo,
         "date": date,
-	"noteid": noteid,
+        "noteid": noteid,
         "content": content
     };
     $("#signal").css("background-image","url('/notifier/images/yellowsignal.png')");
-    $.ajax("http://localhost/notifier/notesreceiver.php", {
+    $.ajax("notesreceiver.php", {
         type: 'POST',
         data: data,
         dataType: "xml"
